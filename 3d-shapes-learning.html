@@ -470,13 +470,10 @@
         void roller.offsetWidth;
         if (rampPick.sphere) {
             roller.classList.add('roll');
-            document.getElementById('ramp-fb').textContent = rampPick.name + '會滾下去。這是球體。';
-            speakNow(rampPick.name + '會滾下去。這是球體。');
         } else {
             roller.classList.add('stuck');
-            document.getElementById('ramp-fb').textContent = rampPick.name + '不會滾下去。這不是球體。';
-            speakNow(rampPick.name + '不會滾下去。這不是球體。');
         }
+        document.getElementById('ramp-fb').textContent = '';
     }
     function resetRamp() {
         const roller = document.getElementById('roller');
@@ -591,13 +588,10 @@
         void el.offsetWidth;
         if (tablePick.prism) {
             el.classList.remove('fall');
-            document.getElementById('table-fb').textContent = tablePick.name + '可以豎立。這是柱體。請指出頂和底。';
-            speakNow(tablePick.name + '可以豎立。這是柱體。');
         } else {
             el.classList.add('fall');
-            document.getElementById('table-fb').textContent = tablePick.name + '不能豎立。這不是柱體。';
-            speakNow(tablePick.name + '不能豎立。這不是柱體。');
         }
+        document.getElementById('table-fb').textContent = '';
     }
     function resetTable() {
         const el = document.getElementById('stander');
@@ -610,23 +604,18 @@
         document.getElementById('part-bottom').classList.remove('found');
     }
     function markPart(which) {
-        if (!tablePick || !tablePick.prism) {
-            document.getElementById('table-fb').textContent = '請先選可以豎立的柱體。';
+        if (!tablePick) {
+            document.getElementById('table-fb').textContent = '請先選物件。';
             return;
         }
         if (which === 'top') {
             foundTop = true;
             document.getElementById('part-top').classList.add('found');
-            speakNow('頂是平面。');
         } else {
             foundBottom = true;
             document.getElementById('part-bottom').classList.add('found');
-            speakNow('底是平面。');
         }
-        if (foundTop && foundBottom) {
-            document.getElementById('table-fb').textContent = '正確。柱體的頂和底都是平面。';
-            celebrate();
-        }
+        document.getElementById('table-fb').textContent = '';
     }
     function nextG3() {
         g3Index = (g3Index + 1) % g3Data.length;
