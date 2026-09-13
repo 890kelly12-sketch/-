@@ -3,428 +3,859 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>立體圖形 AI 互動學習工作紙</title>
-    <!-- Canvas Confetti 特效庫 -->
+    <title>立體圖形小偵探｜平面、曲面、球體與柱體</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: "PingFang HK", "Chalkboard SE", "微軟正黑體", sans-serif;
-            user-select: none;
-        }
+        * { box-sizing: border-box; user-select: none; }
         body {
-            background: linear-gradient(135deg, #e0f2fe, #fef3c7);
             margin: 0;
-            padding: 15px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: "PingFang HK", "Noto Sans TC", "微軟正黑體", sans-serif;
+            background: linear-gradient(180deg, #e0f2fe 0%, #fef3c7 50%, #dcfce7 100%);
             min-height: 100vh;
+            color: #0f172a;
         }
-        .container {
-            background: #ffffff;
-            border-radius: 25px;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-            max-width: 850px;
-            width: 100%;
+        .wrap {
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 16px;
+        }
+        header.app {
+            background: #fff;
+            border: 5px solid #86efac;
+            border-radius: 28px;
+            padding: 16px 18px;
+            box-shadow: 0 10px 24px rgba(0,0,0,.08);
             text-align: center;
-            border: 5px solid #38bdf8;
-            position: relative;
+            margin-bottom: 14px;
         }
-
-        /* 頂部標題與分頁 */
-        h1 { font-size: 26px; color: #0284c7; margin: 0 0 10px 0; }
-        .nav-tabs {
+        header.app h1 {
+            margin: 0 0 6px;
+            font-size: 26px;
+            background: linear-gradient(45deg, #0284c7, #ea580c);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        header.app p { margin: 0; color: #475569; font-size: 15px; }
+        .tabs {
             display: flex;
-            justify-content: center;
             gap: 8px;
-            margin-bottom: 15px;
             flex-wrap: wrap;
+            margin: 12px 0;
         }
-        .tab-btn {
-            background-color: #f1f5f9;
-            border: 2px solid #cbd5e1;
-            padding: 8px 14px;
+        .tab {
+            flex: 1;
+            min-width: 140px;
+            border: none;
+            background: #fff;
+            border-radius: 16px;
+            padding: 10px 8px;
+            font-weight: 800;
             font-size: 15px;
-            font-weight: bold;
-            border-radius: 20px;
             cursor: pointer;
-            color: #475569;
+            box-shadow: 0 4px 0 #cbd5e1;
         }
-        .tab-btn.active {
-            background-color: #0284c7;
-            color: white;
-            border-color: #0284c7;
-            box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);
+        .tab.active { background: #fde047; box-shadow: 0 4px 0 #ca8a04; }
+        .panel {
+            display: none;
+            background: #fff;
+            border-radius: 28px;
+            border: 5px solid #93c5fd;
+            padding: 16px;
+            box-shadow: 0 10px 24px rgba(0,0,0,.08);
         }
-
-        /* 主卡片區域 */
-        .card-box {
-            background-color: #fafafa;
-            border: 3px dashed #cbd5e1;
-            border-radius: 20px;
-            padding: 15px;
-            min-height: 420px;
+        .panel.show { display: block; }
+        .goal-banner {
+            background: #eff6ff;
+            border-radius: 16px;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            font-weight: 700;
+            color: #1d4ed8;
+        }
+        .tips {
+            background: #fff7ed;
+            border: 2px dashed #fb923c;
+            border-radius: 16px;
+            padding: 10px 12px;
+            margin-bottom: 14px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .q-head {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-        }
-
-        /* 標題列與燈泡按鈕 */
-        .question-header {
-            display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 10px;
-            margin-bottom: 10px;
+            justify-content: space-between;
         }
-        .q-title { font-size: 20px; font-weight: bold; color: #1e293b; }
-        .btn-bulb {
+        .q-title { font-size: 20px; font-weight: 900; margin: 0 0 10px; }
+        .btn-icon {
             background: #fef08a;
-            border: 2px solid #eab308;
+            border: 3px solid #eab308;
             border-radius: 50%;
-            width: 42px;
-            height: 42px;
+            width: 48px;
+            height: 48px;
             font-size: 22px;
             cursor: pointer;
             box-shadow: 0 3px 0 #ca8a04;
+            flex-shrink: 0;
         }
-        .btn-bulb:active { transform: translateY(3px); box-shadow: none; }
-
-        /* 提示資訊框 */
+        .btn-icon:active { transform: translateY(3px); box-shadow: none; }
         .hint-box {
             display: none;
-            background: #fef3c7;
-            border: 2px solid #f59e0b;
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 15px;
-            color: #78350f;
-            font-size: 16px;
-            width: 100%;
-            text-align: left;
+            background: #ecfeff;
+            border: 2px solid #22d3ee;
+            border-radius: 14px;
+            padding: 10px 12px;
+            margin: 8px 0 12px;
+            line-height: 1.55;
         }
-
-        /* 模擬測試區（斜道與桌面） */
-        .simulation-area {
-            display: none;
-            width: 100%;
-            height: 140px;
-            background: #e2e8f0;
-            border-radius: 15px;
-            position: relative;
-            margin-bottom: 15px;
-            overflow: hidden;
-            border: 2px solid #94a3b8;
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 12px 0;
         }
-        /* 斜道樣式 */
-        .ramp {
-            position: absolute;
-            width: 80%;
-            height: 10px;
-            background: #854d0e;
-            top: 40px;
-            left: 10%;
-            transform: rotate(15deg);
-            border-radius: 5px;
+        .choice {
+            background: #f8fafc;
+            border: 3px solid #cbd5e1;
+            border-radius: 18px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 800;
         }
-        /* 桌子樣式 */
-        .table-top {
-            position: absolute;
-            width: 80%;
-            height: 15px;
-            background: #b45309;
-            bottom: 30px;
-            left: 10%;
-            border-radius: 5px;
-        }
-        /* 測試物件動畫 */
-        .sim-object {
-            position: absolute;
-            font-size: 35px;
-            transition: all 1.2s ease-in-out;
-        }
-
-        /* 物件選項按鈕列 */
-        .options-grid {
+        .choice .emoji { font-size: 52px; line-height: 1.1; }
+        .choice.correct { border-color: #16a34a; background: #dcfce7; }
+        .choice.wrong { border-color: #dc2626; background: #fee2e2; }
+        .nav-row {
             display: flex;
+            gap: 10px;
             justify-content: center;
-            gap: 15px;
-            width: 100%;
-            margin-top: 10px;
+            margin-top: 12px;
             flex-wrap: wrap;
         }
-        .item-card {
-            background: white;
-            border: 3px solid #cbd5e1;
-            border-radius: 15px;
-            padding: 10px 15px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 110px;
-            box-shadow: 0 4px 0 #94a3b8;
-            transition: 0.1s;
-        }
-        .item-card:active { transform: translateY(4px); box-shadow: none; }
-        .item-card .icon { font-size: 40px; }
-        .item-card .name { font-weight: bold; margin-top: 5px; color: #334155; }
-
-        /* 回饋與控制按鈕 */
-        .feedback {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0284c7;
-            min-height: 30px;
-            margin-top: 10px;
-        }
-        .next-btn {
-            background-color: #22c55e;
-            color: white;
+        .btn {
             border: none;
-            padding: 10px 25px;
-            font-size: 18px;
-            font-weight: bold;
-            border-radius: 50px;
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-size: 17px;
+            font-weight: 800;
             cursor: pointer;
-            box-shadow: 0 4px 0 #15803d;
-            margin-top: 10px;
+            color: #fff;
         }
+        .btn-green { background: #22c55e; box-shadow: 0 4px 0 #15803d; }
+        .btn-blue { background: #3b82f6; box-shadow: 0 4px 0 #1d4ed8; }
+        .btn-orange { background: #f97316; box-shadow: 0 4px 0 #c2410c; }
+        .feedback { min-height: 28px; text-align: center; font-weight: 800; margin-top: 6px; }
+        .progress { text-align: center; color: #64748b; margin-bottom: 8px; font-weight: 700; }
+
+        /* Goal 1 shape cards */
+        .shape-lab {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        @media (max-width: 640px) { .shape-lab { grid-template-columns: 1fr; } }
+        .shape-preview {
+            background: #f1f5f9;
+            border-radius: 18px;
+            min-height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .face-btns { display: flex; flex-direction: column; gap: 8px; }
+        .face-btn {
+            border: 3px solid #94a3b8;
+            background: #fff;
+            border-radius: 14px;
+            padding: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            text-align: left;
+        }
+        .face-btn.on-flat { border-color: #2563eb; background: #dbeafe; }
+        .face-btn.on-curve { border-color: #c026d3; background: #fae8ff; }
+
+        .cube3d {
+            width: 90px; height: 90px;
+            background: #93c5fd;
+            transform: rotateX(-18deg) rotateY(28deg);
+            box-shadow: 18px -12px 0 #60a5fa, 0 16px 0 #3b82f6;
+            border: 3px solid #1d4ed8;
+        }
+        .sphere3d {
+            width: 110px; height: 110px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 30%, #fda4af, #e11d48 70%);
+            box-shadow: inset -12px -10px 0 rgba(0,0,0,.12);
+        }
+        .cyl3d {
+            width: 70px; height: 100px;
+            background: linear-gradient(#38bdf8, #0284c7);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 0 0 3px #0369a1;
+        }
+        .cyl3d::before, .cyl3d::after {
+            content: "";
+            position: absolute;
+            left: -3px; right: -3px;
+            height: 22px;
+            background: #7dd3fc;
+            border: 3px solid #0369a1;
+            border-radius: 50%;
+        }
+        .cyl3d::before { top: -12px; }
+        .cyl3d::after { bottom: -12px; background: #0369a1; }
+
+        .cone3d {
+            width: 0; height: 0;
+            border-left: 55px solid transparent;
+            border-right: 55px solid transparent;
+            border-bottom: 110px solid #fb923c;
+            position: relative;
+        }
+        .cone3d::after {
+            content: "";
+            position: absolute;
+            left: -46px; bottom: -16px;
+            width: 92px; height: 24px;
+            background: #fdba74;
+            border: 3px solid #c2410c;
+            border-radius: 50%;
+        }
+
+        /* Ramp */
+        .lab {
+            margin-top: 12px;
+            background: #f8fafc;
+            border-radius: 18px;
+            padding: 12px;
+        }
+        .lab h3 { margin: 0 0 8px; }
+        .objects {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .obj {
+            border: 3px solid #cbd5e1;
+            background: #fff;
+            border-radius: 14px;
+            padding: 8px 10px;
+            cursor: pointer;
+            font-weight: 800;
+            min-width: 86px;
+            text-align: center;
+        }
+        .obj.picked { border-color: #2563eb; background: #dbeafe; }
+        .ramp-wrap {
+            position: relative;
+            height: 170px;
+            overflow: hidden;
+            border-radius: 14px;
+            background: linear-gradient(#e0f2fe, #bbf7d0);
+        }
+        .ramp {
+            position: absolute;
+            left: 20px; right: 20px; bottom: 18px;
+            height: 18px;
+            background: #78716c;
+            transform: rotate(-18deg);
+            transform-origin: left center;
+            border-radius: 8px;
+        }
+        .roller {
+            position: absolute;
+            left: 28px;
+            top: 28px;
+            font-size: 42px;
+            transition: left 1.1s ease-in, top 1.1s ease-in, transform 1.1s linear;
+        }
+        .roller.roll {
+            left: calc(100% - 70px);
+            top: 108px;
+            transform: rotate(420deg);
+        }
+        .roller.stuck {
+            left: 70px;
+            top: 46px;
+            transform: rotate(12deg);
+        }
+
+        /* Table stand */
+        .table-wrap {
+            position: relative;
+            height: 170px;
+            background: linear-gradient(#e0f2fe, #fef9c3);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+        .tabletop {
+            position: absolute;
+            left: 10%; right: 10%;
+            bottom: 36px;
+            height: 16px;
+            background: #92400e;
+            border-radius: 6px;
+        }
+        .table-leg {
+            position: absolute;
+            bottom: 10px;
+            width: 12px; height: 30px;
+            background: #78350f;
+        }
+        .table-leg.l { left: 18%; }
+        .table-leg.r { right: 18%; }
+        .stander {
+            position: absolute;
+            left: 50%;
+            bottom: 52px;
+            transform: translateX(-50%);
+            font-size: 54px;
+            transition: transform .5s ease, bottom .5s ease;
+        }
+        .stander.fall {
+            transform: translateX(-20%) rotate(78deg);
+            bottom: 20px;
+        }
+        .highlight-parts {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+        .part {
+            background: #fff;
+            border: 2px dashed #64748b;
+            border-radius: 12px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-weight: 800;
+        }
+        .part.found { background: #dcfce7; border-color: #16a34a; }
+        .teacher {
+            margin-top: 14px;
+            background: #f1f5f9;
+            border-radius: 16px;
+            padding: 10px 12px;
+            font-size: 14px;
+            color: #334155;
+            line-height: 1.55;
+        }
+        details summary { cursor: pointer; font-weight: 800; }
     </style>
 </head>
 <body>
+<div class="wrap">
+    <header class="app">
+        <h1>立體圖形小偵探</h1>
+        <p>平面同曲面 · 球體 · 柱體　（小一至小三探究學習）</p>
+    </header>
 
-<div class="container">
-    <h1>📦 立體圖形 AI 互動學習工作紙</h1>
-
-    <!-- 頁籤導覽 -->
-    <div class="nav-tabs">
-        <button class="tab-btn active" onclick="switchGoal(1, this)">目標一：平面與曲面</button>
-        <button class="tab-btn" onclick="switchGoal(2, this)">目標二：球體特性</button>
-        <button class="tab-btn" onclick="switchGoal(3, this)">目標三：柱體特性</button>
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('g1', this)">目標一　平面／曲面</button>
+        <button class="tab" onclick="showTab('g2', this)">目標二　球體</button>
+        <button class="tab" onclick="showTab('g3', this)">目標三　柱體</button>
     </div>
 
-    <!-- 主展示區 -->
-    <div class="card-box">
-        <div class="question-header">
-            <div class="q-title" id="q-title">題目載入中...</div>
-            <button class="btn-bulb" onclick="toggleHint()" title="按我拿提示！">💡</button>
+    <!-- GOAL 1 -->
+    <section id="g1" class="panel show">
+        <div class="goal-banner">目標一：找出立體圖形中的「平面」同「曲面」</div>
+        <div class="tips">
+            <strong>小貼士：</strong><br>
+            🖐️ 用手「摸」：摸落去平平哋、可以貼實枱面 → <b>平面</b><br>
+            🖐️ 摸落去彎彎哋、會滑走 → <b>曲面</b><br>
+            👀 用眼「睇」：有直邊圍住嘅面多數係平面；圓滾滾、冇直邊嘅面多數係曲面。
+        </div>
+        <div class="progress" id="g1-progress"></div>
+        <div class="q-head">
+            <h2 class="q-title" id="g1-title"></h2>
+            <button class="btn-icon" title="提示" onclick="toggleHint('g1-hint')">💡</button>
+        </div>
+        <div class="hint-box" id="g1-hint"></div>
+        <div id="g1-body"></div>
+        <div class="feedback" id="g1-fb"></div>
+        <div class="nav-row">
+            <button class="btn btn-green" onclick="checkG1()">核對答案</button>
+            <button class="btn btn-blue" onclick="nextG1()">下一題</button>
+            <button class="btn btn-orange" onclick="speakNow(g1Data[g1Index].speak)">🗣️ 讀題</button>
+        </div>
+        <div class="teacher">
+            <details>
+                <summary>教師備註（課堂建議）</summary>
+                <p>建議先用實物：積木、罐、波、雪糕筒。請學生閉眼摸一摸，再講「平定彎」。</p>
+                <p>常見迷思：圓柱側面「望落好似長方形」，但其實係曲面；圓形底先係平面。</p>
+                <p>延伸：數一數每個立體有幾多個平面、幾多個曲面。</p>
+            </details>
+        </div>
+    </section>
+
+    <!-- GOAL 2 -->
+    <section id="g2" class="panel">
+        <div class="goal-banner">目標二：指出球體特性——可滾動、無邊亦無角</div>
+        <div class="tips">
+            <strong>小貼士：</strong>球體四面都係曲面，冇邊冇角，放斜道會滾走。橙、足球似球體；雪糕筒、紙巾盒都唔係。
+        </div>
+        <div class="progress" id="g2-progress"></div>
+        <div class="q-head">
+            <h2 class="q-title" id="g2-title"></h2>
+            <button class="btn-icon" title="提示" onclick="showSphereHint()">💡</button>
+        </div>
+        <div class="hint-box" id="g2-hint">
+            球體特性：① 可以滾動　② 無邊　③ 無角。<br>
+            唔肯定？將物件放到下面斜道試吓，會滾落去嘅先至似球體。
+        </div>
+        <div class="choices" id="g2-choices"></div>
+        <div class="feedback" id="g2-fb"></div>
+        <div class="nav-row">
+            <button class="btn btn-blue" onclick="nextG2()">下一題</button>
+            <button class="btn btn-orange" onclick="speakNow(g2Data[g2Index].speak)">🗣️ 讀題</button>
         </div>
 
-        <!-- 提示文字框 -->
-        <div class="hint-box" id="hint-box"></div>
+        <div class="lab" id="ramp-lab" style="display:none;">
+            <h3>🔬 斜道實驗：邊樣會滾落去？</h3>
+            <p>先揀一件物件，再撳「放上斜道」。</p>
+            <div class="objects" id="ramp-objects"></div>
+            <div class="nav-row" style="margin:8px 0;">
+                <button class="btn btn-green" onclick="releaseRamp()">放上斜道</button>
+                <button class="btn btn-blue" onclick="resetRamp()">重設</button>
+            </div>
+            <div class="ramp-wrap">
+                <div class="ramp"></div>
+                <div class="roller" id="roller">❓</div>
+            </div>
+            <div class="feedback" id="ramp-fb"></div>
+        </div>
+    </section>
 
-        <!-- 物理模擬測試區（斜道/桌面） -->
-        <div class="simulation-area" id="sim-area">
-            <div id="sim-stage"></div>
-            <div id="sim-obj" class="sim-object"></div>
+    <!-- GOAL 3 -->
+    <section id="g3" class="panel">
+        <div class="goal-banner">目標三：指出柱體特性——可豎立，頂同底都係平嘅</div>
+        <div class="tips">
+            <strong>小貼士：</strong>柱體可以穩穩企喺枱上。頂同底都係平面，而且形狀一樣。紙巾盒、罐、積木柱都係柱體；波同雪糕筒就唔係（雪糕筒係錐體）。
+        </div>
+        <div class="progress" id="g3-progress"></div>
+        <div class="q-head">
+            <h2 class="q-title" id="g3-title"></h2>
+            <button class="btn-icon" title="提示" onclick="showPrismHint()">💡</button>
+        </div>
+        <div class="hint-box" id="g3-hint">
+            柱體特性：① 可以豎立　② 底部係平　③ 頂部都係平。<br>
+            試吓將物件「企」喺枱上，再指出頂同底。
+        </div>
+        <div class="choices" id="g3-choices"></div>
+        <div class="feedback" id="g3-fb"></div>
+        <div class="nav-row">
+            <button class="btn btn-blue" onclick="nextG3()">下一題</button>
+            <button class="btn btn-orange" onclick="speakNow(g3Data[g3Index].speak)">🗣️ 讀題</button>
         </div>
 
-        <!-- 選項按鈕區 -->
-        <div class="options-grid" id="options-grid"></div>
-
-        <!-- 反饋訊息 -->
-        <div class="feedback" id="feedback"></div>
-    </div>
-
-    <button class="next-btn" onclick="nextQuestion()">➡️ 下一題</button>
+        <div class="lab" id="table-lab" style="display:none;">
+            <h3>🔬 枱面實驗：邊樣可以豎立？</h3>
+            <p>揀一件物件，撳「放到枱上」。之後再指出柱體嘅頂同底。</p>
+            <div class="objects" id="table-objects"></div>
+            <div class="nav-row" style="margin:8px 0;">
+                <button class="btn btn-green" onclick="placeOnTable()">放到枱上</button>
+                <button class="btn btn-blue" onclick="resetTable()">重設</button>
+            </div>
+            <div class="table-wrap">
+                <div class="stander" id="stander">❓</div>
+                <div class="tabletop"></div>
+                <div class="table-leg l"></div>
+                <div class="table-leg r"></div>
+            </div>
+            <div class="feedback" id="table-fb"></div>
+            <div class="highlight-parts">
+                <button class="part" id="part-top" onclick="markPart('top')">指出頂部（平面）</button>
+                <button class="part" id="part-bottom" onclick="markPart('bottom')">指出底部（平面）</button>
+            </div>
+        </div>
+    </section>
 </div>
 
 <script>
-    let currentGoal = 1;
-    let currentQIndex = 0;
-
-    // 廣東話語音朗讀
-    function speak(text) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'zh-HK';
-            utterance.rate = 0.85;
-            window.speechSynthesis.speak(utterance);
-        }
+    function speakNow(text) {
+        if (!('speechSynthesis' in window)) return;
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.lang = 'zh-HK';
+        u.rate = 0.88;
+        u.pitch = 1.08;
+        speechSynthesis.speak(u);
     }
-
-    // 題庫資料結構
-    const quizData = {
-        goal1: [
-            {
-                title: "以下哪一個物件同時有「平面」和「曲面」？",
-                hint: "小貼士：平面像鏡子一樣平平的；曲面是彎彎的。請點擊物件放入斜道測試！",
-                options: [
-                    { name: "罐頭", icon: "🥫", isCorrect: true, type: "both", desc: "答對咗！罐頭頂部和底部是平面，側面是曲面！" },
-                    { name: "足球", icon: "⚽", isCorrect: false, type: "curved", desc: "足球只有曲面喔！" },
-                    { name: "紙巾盒", icon: "🧻", isCorrect: false, type: "flat", desc: "紙巾盒只有平面喔！" }
-                ]
-            },
-            {
-                title: "魔術方塊（正方體）有沒有「曲面」？",
-                hint: "小貼士：放在斜道上試試看，看看它會滾動還是只能滑動？",
-                options: [
-                    { name: "只有平面", icon: "🧊", isCorrect: true, type: "flat", desc: "你答對咗啦！魔術方塊全部都是平面，沒有曲面。" },
-                    { name: "有曲面", icon: "🏀", isCorrect: false, type: "curved", desc: "再想想看，正方體有彎彎的面嗎？" }
-                ]
-            }
-        ],
-        goal2: [
-            {
-                title: "以下哪一個是「球體」？",
-                hint: "💡 球體特性：可自由滾動，而且「無邊亦無角」。按下方物件放在斜道上測試看看！",
-                options: [
-                    { name: "橙", icon: "🍊", isCorrect: true, isSphere: true, desc: "答對咗！橙是球體，可以順暢滾動，而且沒有邊和角！" },
-                    { name: "雪糕筒", icon: "🍦", isCorrect: false, isSphere: false, desc: "雪糕筒有尖尖的角，不是球體喔！" },
-                    { name: "紙巾盒", icon: "🧻", isCorrect: false, isSphere: false, desc: "紙巾盒有直直的邊和尖角，不是球體！" }
-                ]
-            },
-            {
-                title: "哪一個物件放在斜道上可以向任何方向滾動？",
-                hint: "💡 球體沒有尖角限制，所以向哪裡推都能滾動！",
-                options: [
-                    { name: "乒乓球", icon: "🏓", isCorrect: true, isSphere: true, desc: "答對咗！乒乓球是球體，無邊無角，可以自由滾動！" },
-                    { name: "骰子", icon: "🎲", isCorrect: false, isSphere: false, desc: "骰子有角和邊，不能自由滾動喔！" }
-                ]
-            }
-        ],
-        goal3: [
-            {
-                title: "以下哪一個是「柱體」？",
-                hint: "💡 柱體特性：可以豎立在桌上，且「頂部和底部是平平的形狀」。按物件放在桌上測試！",
-                options: [
-                    { name: "雪糕筒", icon: "🍦", isCorrect: false, isPrism: false, desc: "雪糕筒頂部是尖的，不能兩端都平放豎立！" },
-                    { name: "紙巾盒", icon: "🧻", isCorrect: true, isPrism: true, desc: "答對咗！紙巾盒可以豎立，頂和底都是平平的長方形，是柱體！" }
-                ]
-            },
-            {
-                title: "以下哪一個物件可以豎立，且頂部與底部形狀完全一樣？",
-                hint: "💡 柱體可以站得穩穩的，上下兩個面平平且形狀相同。",
-                options: [
-                    { name: "罐頭", icon: "🥫", isCorrect: true, isPrism: true, desc: "答對咗！罐頭是圓柱體，頂部和底部都是平平的圓形！" },
-                    { name: "金字塔", icon: "🎪", isCorrect: false, isPrism: false, desc: "金字塔頂部是尖角，不是柱體喔！" }
-                ]
-            }
-        ]
-    };
-
-    // 切換學習目標
-    function switchGoal(goalNum, btn) {
-        currentGoal = goalNum;
-        currentQIndex = 0;
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    function showTab(id, btn) {
+        document.querySelectorAll('.panel').forEach(p => p.classList.remove('show'));
+        document.getElementById(id).classList.add('show');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        loadQuestion();
+    }
+    function toggleHint(id) {
+        const el = document.getElementById(id);
+        el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+    function celebrate() {
+        if (window.confetti) confetti({ particleCount: 90, spread: 70, origin: { y: 0.7 } });
     }
 
-    // 載入當前題目
-    function loadQuestion() {
-        const goalKey = `goal${currentGoal}`;
-        const qList = quizData[goalKey];
-        const q = qList[currentQIndex % qList.length];
+    /* ===== 目標一 ===== */
+    const g1Data = [
+        {
+            title: '立方體（積木）有邊啲面係平面？邊啲係曲面？',
+            speak: '立方體有邊啲面係平面？邊啲係曲面？',
+            hint: '立方體好似骰仔。六個面都摸落去平平哋，可以貼實枱面。',
+            preview: '<div class="cube3d"></div><div>立方體</div>',
+            faces: [
+                { name: '上面', type: 'flat' },
+                { name: '前面', type: 'flat' },
+                { name: '側面', type: 'flat' }
+            ],
+            ask: '撳一撳每個面，揀「平面」定「曲面」。其實三個面全部都係平面。',
+            answerNote: '立方體全部都係平面，冇曲面。'
+        },
+        {
+            title: '球體（波）嘅表面係平面定曲面？',
+            speak: '球體嘅表面係平面定曲面？',
+            hint: '波摸落去四面都彎，冇一塊可以完全貼實枱面。',
+            preview: '<div class="sphere3d"></div><div>球體</div>',
+            faces: [{ name: '整個表面', type: 'curve' }],
+            ask: '揀一揀：整個表面係平面定曲面？',
+            answerNote: '球體只有曲面，冇平面、冇邊、冇角。'
+        },
+        {
+            title: '圓柱體（罐）邊度平？邊度彎？',
+            speak: '圓柱體邊度平？邊度彎？',
+            hint: '頂同底可以企穩，係圓形平面；中間一圈摸落去彎彎哋，係曲面。',
+            preview: '<div class="cyl3d"></div><div>圓柱體</div>',
+            faces: [
+                { name: '頂部圓面', type: 'flat' },
+                { name: '底部圓面', type: 'flat' },
+                { name: '側面一圈', type: 'curve' }
+            ],
+            ask: '為每個部分揀平面或曲面。',
+            answerNote: '圓柱有 2 個平面（頂、底）同 1 個曲面（側面）。'
+        },
+        {
+            title: '圓錐體（派對帽／雪糕筒）邊度平？邊度彎？',
+            speak: '圓錐體邊度平？邊度彎？',
+            hint: '底部圓面係平面，可以放平；尖尖嗰面一圈係曲面。',
+            preview: '<div class="cone3d"></div><div style="margin-top:18px">圓錐體</div>',
+            faces: [
+                { name: '底部圓面', type: 'flat' },
+                { name: '斜斜嘅側面', type: 'curve' }
+            ],
+            ask: '為每個部分揀平面或曲面。',
+            answerNote: '圓錐有 1 個平面（底）同 1 個曲面（側面）。'
+        }
+    ];
+    let g1Index = 0;
+    let g1Picks = {};
 
-        document.getElementById('q-title').innerText = q.title;
-        document.getElementById('hint-box').innerText = q.hint;
-        document.getElementById('hint-box').style.display = 'none';
-        document.getElementById('sim-area').style.display = 'none';
-        document.getElementById('feedback').innerText = '';
-
-        // 渲染選項按鈕
-        const grid = document.getElementById('options-grid');
-        grid.innerHTML = '';
-        q.options.forEach(opt => {
-            const card = document.createElement('div');
-            card.className = 'item-card';
-            card.onclick = () => handleSelect(opt);
-            card.innerHTML = `<div class="icon">${opt.icon}</div><div class="name">${opt.name}</div>`;
-            grid.appendChild(card);
+    function renderG1() {
+        const q = g1Data[g1Index];
+        document.getElementById('g1-progress').textContent = `第 ${g1Index + 1} / ${g1Data.length} 題`;
+        document.getElementById('g1-title').textContent = q.title;
+        document.getElementById('g1-hint').innerHTML = q.hint;
+        document.getElementById('g1-hint').style.display = 'none';
+        document.getElementById('g1-fb').textContent = '';
+        g1Picks = {};
+        let facesHtml = '';
+        q.faces.forEach((f, i) => {
+            facesHtml += `<div class="face-btn" id="face-${i}">
+                ${f.name}
+                <div style="margin-top:6px;">
+                    <button class="btn btn-blue" style="padding:6px 12px;font-size:14px;" onclick="pickFace(${i},'flat')">平面</button>
+                    <button class="btn btn-orange" style="padding:6px 12px;font-size:14px;" onclick="pickFace(${i},'curve')">曲面</button>
+                </div>
+            </div>`;
         });
-
-        speak(q.title);
+        document.getElementById('g1-body').innerHTML = `
+            <p>${q.ask}</p>
+            <div class="shape-lab">
+                <div class="shape-preview">${q.preview}</div>
+                <div class="face-btns">${facesHtml}</div>
+            </div>`;
     }
-
-    // 切換提示顯示並執行模擬
-    function toggleHint() {
-        const hintBox = document.getElementById('hint-box');
-        const simArea = document.getElementById('sim-area');
-        
-        if (hintBox.style.display === 'none') {
-            hintBox.style.display = 'block';
-            simArea.style.display = 'block';
-            speak(hintBox.innerText);
-            setupSimulationStage();
+    function pickFace(i, type) {
+        g1Picks[i] = type;
+        const el = document.getElementById('face-' + i);
+        el.classList.remove('on-flat', 'on-curve');
+        el.classList.add(type === 'flat' ? 'on-flat' : 'on-curve');
+        speakNow(type === 'flat' ? '平面' : '曲面');
+    }
+    function checkG1() {
+        const q = g1Data[g1Index];
+        let ok = true;
+        q.faces.forEach((f, i) => {
+            if (g1Picks[i] !== f.type) ok = false;
+        });
+        const fb = document.getElementById('g1-fb');
+        if (Object.keys(g1Picks).length < q.faces.length) {
+            fb.textContent = '請先為每一個面作出選擇。';
+            speakNow('請先為每一個面作出選擇');
+            return;
+        }
+        if (ok) {
+            fb.textContent = '✅ 答得啱！' + q.answerNote;
+            speakNow('答得啱！');
+            celebrate();
         } else {
-            hintBox.style.display = 'none';
-            simArea.style.display = 'none';
+            fb.textContent = '再摸一摸、想一想：邊啲可以貼實枱面？';
+            speakNow('再試一次');
         }
     }
+    function nextG1() {
+        g1Index = (g1Index + 1) % g1Data.length;
+        renderG1();
+    }
 
-    // 設定斜道或桌面模擬舞台
-    function setupSimulationStage() {
-        const stage = document.getElementById('sim-stage');
-        if (currentGoal === 1 || currentGoal === 2) {
-            // 斜道場景
-            stage.innerHTML = '<div class="ramp"></div>';
+    /* ===== 目標二 ===== */
+    const g2Data = [
+        { title: '以下邊一樣係球體？', speak: '橙、雪糕同紙巾盒，邊一樣係球體？',
+          items: [
+            { name: '橙', emoji: '🍊', sphere: true },
+            { name: '雪糕', emoji: '🍦', sphere: false },
+            { name: '紙巾盒', emoji: '📦', sphere: false }
+          ]},
+        { title: '以下邊一樣係球體？', speak: '足球、書本同水杯，邊一樣係球體？',
+          items: [
+            { name: '足球', emoji: '⚽', sphere: true },
+            { name: '書本', emoji: '📘', sphere: false },
+            { name: '水杯', emoji: '🥤', sphere: false }
+          ]},
+        { title: '以下邊一樣係球體？', speak: '西瓜、金字塔同積木，邊一樣係球體？',
+          items: [
+            { name: '西瓜', emoji: '🍉', sphere: true },
+            { name: '金字塔', emoji: '🔺', sphere: false },
+            { name: '積木', emoji: '🧊', sphere: false }
+          ]},
+        { title: '以下邊一樣係球體？', speak: '玻璃珠、罐同派對帽，邊一樣係球體？',
+          items: [
+            { name: '玻璃珠', emoji: '🔵', sphere: true },
+            { name: '罐', emoji: '🥫', sphere: false },
+            { name: '派對帽', emoji: '🎉', sphere: false }
+          ]}
+    ];
+    let g2Index = 0;
+    let rampPick = null;
+
+    function renderG2() {
+        const q = g2Data[g2Index];
+        document.getElementById('g2-progress').textContent = `第 ${g2Index + 1} / ${g2Data.length} 題`;
+        document.getElementById('g2-title').textContent = q.title;
+        document.getElementById('g2-hint').style.display = 'none';
+        document.getElementById('g2-fb').textContent = '';
+        document.getElementById('g2-choices').innerHTML = q.items.map((it, i) =>
+            `<button class="choice" onclick="pickSphere(${i})"><div class="emoji">${it.emoji}</div>${it.name}</button>`
+        ).join('');
+        setupRamp(q.items);
+    }
+    function pickSphere(i) {
+        const q = g2Data[g2Index];
+        const buttons = document.querySelectorAll('#g2-choices .choice');
+        buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+        if (q.items[i].sphere) {
+            buttons[i].classList.add('correct');
+            document.getElementById('g2-fb').textContent = '✅ 啱啦！球體可以滾動，而且無邊無角。';
+            speakNow('答得啱，呢樣係球體');
+            celebrate();
         } else {
-            // 桌面豎立場景
-            stage.innerHTML = '<div class="table-top"></div>';
+            buttons[i].classList.add('wrong');
+            document.getElementById('g2-fb').textContent = '再諗諗：佢有冇邊有冇角？放斜道會唔會滾？撳💡試實驗。';
+            speakNow('再試一次，可以用斜道實驗');
         }
     }
-
-    // 點擊選項處理與動態模擬演示
-    function handleSelect(opt) {
-        const simArea = document.getElementById('sim-area');
-        const simObj = document.getElementById('sim-obj');
-        simArea.style.display = 'block';
-        setupSimulationStage();
-
-        simObj.innerText = opt.icon;
-
-        if (currentGoal === 1 || currentGoal === 2) {
-            // 斜道模擬動畫
-            simObj.style.top = '10px';
-            simObj.style.left = '15%';
-            simObj.style.transform = 'rotate(0deg)';
-
-            setTimeout(() => {
-                if (opt.type === 'curved' || opt.isSphere || opt.type === 'both') {
-                    // 滾動動畫
-                    simObj.style.top = '70px';
-                    simObj.style.left = '75%';
-                    simObj.style.transform = 'rotate(360deg)';
-                } else {
-                    // 滑動或卡住（非球體/非曲面）
-                    simObj.style.top = '30px';
-                    simObj.style.left = '30%';
-                }
-            }, 100);
-
+    function showSphereHint() {
+        const box = document.getElementById('g2-hint');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        document.getElementById('ramp-lab').style.display = 'block';
+        speakNow('球體可以滾動，無邊亦無角。試吓放到斜道上。');
+    }
+    function setupRamp(items) {
+        rampPick = null;
+        document.getElementById('ramp-objects').innerHTML = items.map((it, i) =>
+            `<button class="obj" id="ramp-obj-${i}" onclick="chooseRamp(${i})">${it.emoji}<br>${it.name}</button>`
+        ).join('');
+        resetRamp();
+    }
+    function chooseRamp(i) {
+        rampPick = g2Data[g2Index].items[i];
+        document.querySelectorAll('#ramp-objects .obj').forEach(el => el.classList.remove('picked'));
+        document.getElementById('ramp-obj-' + i).classList.add('picked');
+        document.getElementById('roller').textContent = rampPick.emoji;
+        document.getElementById('roller').className = 'roller';
+        document.getElementById('ramp-fb').textContent = '已揀：' + rampPick.name + '，可以放上斜道。';
+    }
+    function releaseRamp() {
+        if (!rampPick) {
+            document.getElementById('ramp-fb').textContent = '請先揀一件物件。';
+            return;
+        }
+        const roller = document.getElementById('roller');
+        roller.className = 'roller';
+        void roller.offsetWidth;
+        if (rampPick.sphere) {
+            roller.classList.add('roll');
+            document.getElementById('ramp-fb').textContent = rampPick.name + '滾落斜道喇！所以佢係球體。';
+            speakNow(rampPick.name + '滾落去，係球體');
         } else {
-            // 柱體豎立桌面模擬動畫
-            simObj.style.top = '10px';
-            simObj.style.left = '45%';
-
-            setTimeout(() => {
-                simObj.style.top = '55px'; // 放到桌上
-            }, 100);
-        }
-
-        // 回饋訊息與聲音
-        const fb = document.getElementById('feedback');
-        fb.innerText = opt.desc;
-        speak(opt.desc);
-
-        if (opt.isCorrect) {
-            confetti({ particleCount: 80, spread: 60 });
+            roller.classList.add('stuck');
+            document.getElementById('ramp-fb').textContent = rampPick.name + '滾唔到（或者只係滑一下），因為佢唔係球體。';
+            speakNow(rampPick.name + '滾唔到，唔係球體');
         }
     }
-
-    function nextQuestion() {
-        currentQIndex++;
-        loadQuestion();
+    function resetRamp() {
+        document.getElementById('roller').className = 'roller';
+        document.getElementById('roller').textContent = rampPick ? rampPick.emoji : '❓';
+        document.getElementById('ramp-fb').textContent = '';
+    }
+    function nextG2() {
+        g2Index = (g2Index + 1) % g2Data.length;
+        document.getElementById('ramp-lab').style.display = 'none';
+        renderG2();
     }
 
-    window.onload = loadQuestion;
+    /* ===== 目標三 ===== */
+    const g3Data = [
+        { title: '以下邊一樣係柱體？', speak: '圓柱罐、波同雪糕，邊一樣係柱體？',
+          items: [
+            { name: '圓柱罐', emoji: '🥫', prism: true },
+            { name: '波', emoji: '🏀', prism: false },
+            { name: '雪糕', emoji: '🍦', prism: false }
+          ]},
+        { title: '紙巾盒同橙，邊一樣係柱體？', speak: '紙巾盒同橙，邊一樣係柱體？',
+          items: [
+            { name: '紙巾盒', emoji: '📦', prism: true },
+            { name: '橙', emoji: '🍊', prism: false }
+          ]},
+        { title: '以下邊一樣係柱體？', speak: '積木柱、玻璃珠同派對帽，邊一樣係柱體？',
+          items: [
+            { name: '積木柱', emoji: '🧱', prism: true },
+            { name: '玻璃珠', emoji: '🔵', prism: false },
+            { name: '派對帽', emoji: '🎉', prism: false }
+          ]},
+        { title: '以下邊一樣係柱體？', speak: '水杯、足球同雪糕筒，邊一樣係柱體？',
+          items: [
+            { name: '水杯', emoji: '🥛', prism: true },
+            { name: '足球', emoji: '⚽', prism: false },
+            { name: '雪糕筒', emoji: '🍦', prism: false }
+          ]}
+    ];
+    let g3Index = 0;
+    let tablePick = null;
+    let foundTop = false, foundBottom = false;
+
+    function renderG3() {
+        const q = g3Data[g3Index];
+        document.getElementById('g3-progress').textContent = `第 ${g3Index + 1} / ${g3Data.length} 題`;
+        document.getElementById('g3-title').textContent = q.title;
+        document.getElementById('g3-hint').style.display = 'none';
+        document.getElementById('g3-fb').textContent = '';
+        document.getElementById('g3-choices').innerHTML = q.items.map((it, i) =>
+            `<button class="choice" onclick="pickPrism(${i})"><div class="emoji">${it.emoji}</div>${it.name}</button>`
+        ).join('');
+        setupTable(q.items);
+    }
+    function pickPrism(i) {
+        const q = g3Data[g3Index];
+        const buttons = document.querySelectorAll('#g3-choices .choice');
+        buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+        if (q.items[i].prism) {
+            buttons[i].classList.add('correct');
+            document.getElementById('g3-fb').textContent = '✅ 啱啦！柱體可以豎立，頂同底都係平嘅。';
+            speakNow('答得啱，呢樣係柱體');
+            celebrate();
+        } else {
+            buttons[i].classList.add('wrong');
+            document.getElementById('g3-fb').textContent = '再諗諗：佢可唔可以穩穩企喺枱上？頂同底平唔平？撳💡試實驗。';
+            speakNow('再試一次，可以用枱面實驗');
+        }
+    }
+    function showPrismHint() {
+        const box = document.getElementById('g3-hint');
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
+        document.getElementById('table-lab').style.display = 'block';
+        speakNow('柱體可以豎立，底部同頂部都係平嘅。試吓放到枱上。');
+    }
+    function setupTable(items) {
+        tablePick = null;
+        foundTop = foundBottom = false;
+        document.getElementById('part-top').classList.remove('found');
+        document.getElementById('part-bottom').classList.remove('found');
+        document.getElementById('table-objects').innerHTML = items.map((it, i) =>
+            `<button class="obj" id="table-obj-${i}" onclick="chooseTable(${i})">${it.emoji}<br>${it.name}</button>`
+        ).join('');
+        resetTable();
+    }
+    function chooseTable(i) {
+        tablePick = g3Data[g3Index].items[i];
+        document.querySelectorAll('#table-objects .obj').forEach(el => el.classList.remove('picked'));
+        document.getElementById('table-obj-' + i).classList.add('picked');
+        document.getElementById('stander').textContent = tablePick.emoji;
+        document.getElementById('stander').className = 'stander';
+        document.getElementById('table-fb').textContent = '已揀：' + tablePick.name + '，可以放到枱上。';
+    }
+    function placeOnTable() {
+        if (!tablePick) {
+            document.getElementById('table-fb').textContent = '請先揀一件物件。';
+            return;
+        }
+        const el = document.getElementById('stander');
+        el.className = 'stander';
+        void el.offsetWidth;
+        if (tablePick.prism) {
+            el.classList.remove('fall');
+            document.getElementById('table-fb').textContent = tablePick.name + '可以穩穩豎立！因為頂同底都係平面。而家試指出頂部同底部。';
+            speakNow(tablePick.name + '可以豎立，係柱體');
+        } else {
+            el.classList.add('fall');
+            document.getElementById('table-fb').textContent = tablePick.name + '企唔穩，所以唔係柱體。';
+            speakNow(tablePick.name + '企唔穩，唔係柱體');
+        }
+    }
+    function resetTable() {
+        const el = document.getElementById('stander');
+        el.className = 'stander';
+        el.textContent = tablePick ? tablePick.emoji : '❓';
+        document.getElementById('table-fb').textContent = '';
+        foundTop = foundBottom = false;
+        document.getElementById('part-top').classList.remove('found');
+        document.getElementById('part-bottom').classList.remove('found');
+    }
+    function markPart(which) {
+        if (!tablePick || !tablePick.prism) {
+            document.getElementById('table-fb').textContent = '請先揀一件可以豎立嘅柱體，再指出頂同底。';
+            speakNow('請先揀柱體');
+            return;
+        }
+        if (which === 'top') {
+            foundTop = true;
+            document.getElementById('part-top').classList.add('found');
+            speakNow('頂部係平面');
+        } else {
+            foundBottom = true;
+            document.getElementById('part-bottom').classList.add('found');
+            speakNow('底部係平面');
+        }
+        if (foundTop && foundBottom) {
+            document.getElementById('table-fb').textContent = '做得好！你已指出柱體嘅頂同底都係平面，所以方形盒、罐、積木柱都係柱體。';
+            celebrate();
+        }
+    }
+    function nextG3() {
+        g3Index = (g3Index + 1) % g3Data.length;
+        document.getElementById('table-lab').style.display = 'none';
+        renderG3();
+    }
+
+    renderG1();
+    renderG2();
+    renderG3();
 </script>
-
 </body>
 </html>
