@@ -289,12 +289,12 @@
             <h2 class="q-title" id="g2-title"></h2>
             <div class="bulb-row">
                 <div class="bulb-item">
-                    <button class="btn-icon" id="bulb-exp" title="實驗" onclick="openExperiment()">💡</button>
-                    <div class="bulb-label">實驗</div>
-                </div>
-                <div class="bulb-item">
                     <button class="btn-icon locked" id="bulb-tip" title="特性" onclick="openSphereTip()">💡</button>
                     <div class="bulb-label">特性</div>
+                </div>
+                <div class="bulb-item">
+                    <button class="btn-icon" id="bulb-exp" title="實驗" onclick="openExperiment()">💡</button>
+                    <div class="bulb-label">實驗</div>
                 </div>
             </div>
         </div>
@@ -326,18 +326,22 @@
 
     <section id="g3" class="panel">
         <div class="goal-banner">目標：指出柱體的特性</div>
-        <div class="tips">
-            柱體可以豎立。<br>
-            柱體的頂和底都是平的。
-        </div>
         <div class="progress" id="g3-progress"></div>
         <div class="q-head">
             <h2 class="q-title" id="g3-title"></h2>
-            <button class="btn-icon" title="提示" onclick="showPrismHint()">💡</button>
+            <div class="bulb-row">
+                <div class="bulb-item">
+                    <button class="btn-icon locked" id="bulb-tip-p" title="特性" onclick="openPrismTip()">💡</button>
+                    <div class="bulb-label">特性</div>
+                </div>
+                <div class="bulb-item">
+                    <button class="btn-icon" id="bulb-exp-p" title="實驗" onclick="openTableExperiment()">💡</button>
+                    <div class="bulb-label">實驗</div>
+                </div>
+            </div>
         </div>
         <div class="hint-box" id="g3-hint">
-            柱體：可以豎立，頂是平的，底也是平的。<br>
-            把物件放在桌上，看看能不能豎立。
+            柱體可以豎立，頂和底都是平的。
         </div>
         <div class="choices" id="g3-choices"></div>
         <div class="feedback" id="g3-fb"></div>
@@ -579,12 +583,21 @@
             speakNow('請再想一想。');
         }
     }
-    function showPrismHint() {
-        const box = document.getElementById('g3-hint');
-        const show = box.style.display !== 'block';
-        box.style.display = show ? 'block' : 'none';
+    let openedTableExperiment = false;
+
+    function openTableExperiment() {
         document.getElementById('table-lab').style.display = 'block';
-        if (show) speakNow('柱體可以豎立。頂和底都是平的。');
+        openedTableExperiment = true;
+        document.getElementById('bulb-tip-p').classList.remove('locked');
+    }
+
+    function openPrismTip() {
+        if (!openedTableExperiment) {
+            document.getElementById('g3-fb').textContent = '請先按「實驗」。';
+            return;
+        }
+        const box = document.getElementById('g3-hint');
+        box.style.display = box.style.display !== 'block' ? 'block' : 'none';
     }
     function setupTable(items) {
         tablePick = null;
@@ -648,6 +661,9 @@
     function nextG3() {
         g3Index = (g3Index + 1) % g3Data.length;
         document.getElementById('table-lab').style.display = 'none';
+        document.getElementById('g3-hint').style.display = 'none';
+        openedTableExperiment = false;
+        document.getElementById('bulb-tip-p').classList.add('locked');
         renderG3();
     }
 
