@@ -89,6 +89,16 @@
             flex-shrink: 0;
         }
         .btn-icon:active { transform: translateY(3px); box-shadow: none; }
+        .btn-icon.locked {
+            background: #e2e8f0;
+            border-color: #94a3b8;
+            box-shadow: 0 3px 0 #64748b;
+            opacity: 0.55;
+            cursor: not-allowed;
+        }
+        .bulb-row { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
+        .bulb-label { font-size: 12px; font-weight: 800; color: #475569; text-align: center; }
+        .bulb-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .hint-box {
             display: none;
             background: #ecfeff;
@@ -274,18 +284,22 @@
 
     <section id="g2" class="panel show">
         <div class="goal-banner">目標：指出球體的特性</div>
-        <div class="tips">
-            球體可以滾動。<br>
-            球體沒有邊，也沒有角。
-        </div>
         <div class="progress" id="g2-progress"></div>
         <div class="q-head">
             <h2 class="q-title" id="g2-title"></h2>
-            <button class="btn-icon" title="提示" onclick="showSphereHint()">💡</button>
+            <div class="bulb-row">
+                <div class="bulb-item">
+                    <button class="btn-icon" id="bulb-exp" title="實驗" onclick="openExperiment()">💡</button>
+                    <div class="bulb-label">實驗</div>
+                </div>
+                <div class="bulb-item">
+                    <button class="btn-icon locked" id="bulb-tip" title="特性" onclick="openSphereTip()">💡</button>
+                    <div class="bulb-label">特性</div>
+                </div>
+            </div>
         </div>
         <div class="hint-box" id="g2-hint">
-            球體：可以滾動，沒有邊，沒有角。<br>
-            把物件放在斜道上，看看會不會滾下去。
+            球體可以滾動，沒有邊，也沒有角。
         </div>
         <div class="choices" id="g2-choices"></div>
         <div class="feedback" id="g2-fb"></div>
@@ -428,8 +442,8 @@
         buttons.forEach(b => b.classList.remove('correct', 'wrong'));
         if (q.items[i].sphere) {
             buttons[i].classList.add('correct');
-            document.getElementById('g2-fb').textContent = '正確。這是球體。';
-            speakNow('正確。這是球體。');
+            document.getElementById('g2-fb').textContent = '正確。';
+            speakNow('正確。');
             celebrate();
         } else {
             buttons[i].classList.add('wrong');
@@ -437,12 +451,23 @@
             speakNow('請再想一想。');
         }
     }
-    function showSphereHint() {
+    let openedExperiment = false;
+
+    function openExperiment() {
+        document.getElementById('ramp-lab').style.display = 'block';
+        openedExperiment = true;
+        const tipBtn = document.getElementById('bulb-tip');
+        tipBtn.classList.remove('locked');
+    }
+
+    function openSphereTip() {
+        if (!openedExperiment) {
+            document.getElementById('g2-fb').textContent = '請先按「實驗」。';
+            return;
+        }
         const box = document.getElementById('g2-hint');
         const show = box.style.display !== 'block';
         box.style.display = show ? 'block' : 'none';
-        document.getElementById('ramp-lab').style.display = 'block';
-        if (show) speakNow('球體可以滾動，沒有邊，也沒有角。');
     }
     function setupRamp(items) {
         rampPick = null;
@@ -470,13 +495,10 @@
         void roller.offsetWidth;
         if (rampPick.sphere) {
             roller.classList.add('roll');
-            document.getElementById('ramp-fb').textContent = rampPick.name + '會滾下去。這是球體。';
-            speakNow(rampPick.name + '會滾下去。這是球體。');
         } else {
             roller.classList.add('stuck');
-            document.getElementById('ramp-fb').textContent = rampPick.name + '不會滾下去。這不是球體。';
-            speakNow(rampPick.name + '不會滾下去。這不是球體。');
         }
+        document.getElementById('ramp-fb').textContent = '';
     }
     function resetRamp() {
         const roller = document.getElementById('roller');
@@ -487,6 +509,9 @@
     function nextG2() {
         g2Index = (g2Index + 1) % g2Data.length;
         document.getElementById('ramp-lab').style.display = 'none';
+        document.getElementById('g2-hint').style.display = 'none';
+        openedExperiment = false;
+        document.getElementById('bulb-tip').classList.add('locked');
         renderG2();
     }
 
@@ -545,8 +570,8 @@
         buttons.forEach(b => b.classList.remove('correct', 'wrong'));
         if (q.items[i].prism) {
             buttons[i].classList.add('correct');
-            document.getElementById('g3-fb').textContent = '正確。這是柱體。';
-            speakNow('正確。這是柱體。');
+            document.getElementById('g3-fb').textContent = '正確。';
+            speakNow('正確。');
             celebrate();
         } else {
             buttons[i].classList.add('wrong');
@@ -591,13 +616,10 @@
         void el.offsetWidth;
         if (tablePick.prism) {
             el.classList.remove('fall');
-            document.getElementById('table-fb').textContent = tablePick.name + '可以豎立。這是柱體。請指出頂和底。';
-            speakNow(tablePick.name + '可以豎立。這是柱體。');
         } else {
             el.classList.add('fall');
-            document.getElementById('table-fb').textContent = tablePick.name + '不能豎立。這不是柱體。';
-            speakNow(tablePick.name + '不能豎立。這不是柱體。');
         }
+        document.getElementById('table-fb').textContent = '';
     }
     function resetTable() {
         const el = document.getElementById('stander');
@@ -610,23 +632,18 @@
         document.getElementById('part-bottom').classList.remove('found');
     }
     function markPart(which) {
-        if (!tablePick || !tablePick.prism) {
-            document.getElementById('table-fb').textContent = '請先選可以豎立的柱體。';
+        if (!tablePick) {
+            document.getElementById('table-fb').textContent = '請先選物件。';
             return;
         }
         if (which === 'top') {
             foundTop = true;
             document.getElementById('part-top').classList.add('found');
-            speakNow('頂是平面。');
         } else {
             foundBottom = true;
             document.getElementById('part-bottom').classList.add('found');
-            speakNow('底是平面。');
         }
-        if (foundTop && foundBottom) {
-            document.getElementById('table-fb').textContent = '正確。柱體的頂和底都是平面。';
-            celebrate();
-        }
+        document.getElementById('table-fb').textContent = '';
     }
     function nextG3() {
         g3Index = (g3Index + 1) % g3Data.length;
