@@ -10,11 +10,11 @@
         body {
             margin: 0;
             font-family: "PingFang HK", "Noto Sans TC", "微軟正黑體", sans-serif;
-            background: linear-gradient(180deg, #e0f2fe 0%, #fef9c3 100%);
+            background: linear-gradient(180deg, #e0f2fe, #fef9c3);
             min-height: 100vh;
             color: #0f172a;
         }
-        .wrap { max-width: 900px; margin: 0 auto; padding: 16px; }
+        .wrap { max-width: 880px; margin: 0 auto; padding: 16px; }
         header.app {
             background: #fff;
             border: 5px solid #86efac;
@@ -37,9 +37,9 @@
             border: none;
             background: #fff;
             border-radius: 14px;
-            padding: 12px 8px;
+            padding: 12px;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 18px;
             cursor: pointer;
             box-shadow: 0 4px 0 #cbd5e1;
         }
@@ -61,59 +61,50 @@
             color: #1d4ed8;
             font-size: 16px;
         }
-        .tips {
-            background: #fff7ed;
-            border: 2px dashed #fb923c;
-            border-radius: 14px;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-            font-size: 16px;
-            line-height: 1.5;
-        }
+        .progress { text-align: center; color: #64748b; margin-bottom: 8px; font-weight: 700; }
         .q-head {
             display: flex;
             align-items: center;
-            gap: 10px;
             justify-content: space-between;
+            gap: 10px;
         }
-        .q-title { font-size: 20px; font-weight: 900; margin: 0; }
+        .q-title { font-size: 22px; font-weight: 900; margin: 0; }
+        .bulb-row { display: flex; gap: 10px; }
+        .bulb-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+        .bulb-label { font-size: 13px; font-weight: 800; color: #475569; }
         .btn-icon {
             background: #fef08a;
             border: 3px solid #eab308;
             border-radius: 50%;
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             font-size: 22px;
             cursor: pointer;
             box-shadow: 0 3px 0 #ca8a04;
-            flex-shrink: 0;
         }
         .btn-icon:active { transform: translateY(3px); box-shadow: none; }
         .btn-icon.locked {
             background: #e2e8f0;
             border-color: #94a3b8;
             box-shadow: 0 3px 0 #64748b;
-            opacity: 0.55;
+            opacity: 0.5;
             cursor: not-allowed;
         }
-        .bulb-row { display: flex; gap: 8px; align-items: center; flex-shrink: 0; }
-        .bulb-label { font-size: 12px; font-weight: 800; color: #475569; text-align: center; }
-        .bulb-item { display: flex; flex-direction: column; align-items: center; gap: 2px; }
         .hint-box {
             display: none;
             background: #ecfeff;
             border: 2px solid #22d3ee;
             border-radius: 14px;
             padding: 10px 12px;
-            margin: 10px 0;
-            font-size: 16px;
-            line-height: 1.5;
+            margin: 10px 0 0;
+            font-size: 18px;
+            font-weight: 700;
         }
         .choices {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
             gap: 10px;
-            margin: 12px 0;
+            margin: 14px 0;
         }
         .choice {
             background: #f8fafc;
@@ -123,22 +114,16 @@
             text-align: center;
             cursor: pointer;
             font-weight: 800;
-            font-size: 16px;
+            font-size: 18px;
         }
         .choice .emoji { font-size: 52px; line-height: 1.1; }
         .choice.correct { border-color: #16a34a; background: #dcfce7; }
         .choice.wrong { border-color: #dc2626; background: #fee2e2; }
-        .nav-row {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
+        .nav-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
         .btn {
             border: none;
             border-radius: 999px;
-            padding: 10px 20px;
+            padding: 10px 22px;
             font-size: 16px;
             font-weight: 800;
             cursor: pointer;
@@ -146,16 +131,16 @@
         }
         .btn-green { background: #22c55e; box-shadow: 0 4px 0 #15803d; }
         .btn-blue { background: #3b82f6; box-shadow: 0 4px 0 #1d4ed8; }
-        .feedback { min-height: 26px; text-align: center; font-weight: 800; margin-top: 8px; font-size: 16px; }
-        .progress { text-align: center; color: #64748b; margin-bottom: 8px; font-weight: 700; }
-
+        .feedback { min-height: 26px; text-align: center; font-weight: 800; margin: 8px 0; font-size: 18px; }
         .lab {
+            display: none;
             margin-top: 12px;
             background: #f8fafc;
             border-radius: 16px;
             padding: 12px;
         }
-        .lab h3 { margin: 0 0 8px; font-size: 17px; }
+        .lab h3 { margin: 0 0 8px; font-size: 18px; }
+        .lab p { margin: 0 0 8px; }
         .objects { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 10px; }
         .obj {
             border: 3px solid #cbd5e1;
@@ -169,7 +154,6 @@
         }
         .obj.picked { border-color: #2563eb; background: #dbeafe; }
 
-        /* 斜道：左高右低 */
         .ramp-stage {
             position: relative;
             height: 220px;
@@ -203,20 +187,11 @@
             left: 10%;
             top: 4%;
             font-size: 44px;
-            line-height: 1;
             z-index: 2;
             transition: left 1.2s linear, top 1.2s linear, transform 1.2s linear;
         }
-        .roller.roll {
-            left: 78%;
-            top: 58%;
-            transform: rotate(480deg);
-        }
-        .roller.stuck {
-            left: 18%;
-            top: 12%;
-            transform: rotate(10deg);
-        }
+        .roller.roll { left: 78%; top: 58%; transform: rotate(480deg); }
+        .roller.stuck { left: 18%; top: 12%; transform: rotate(10deg); }
 
         .table-wrap {
             position: relative;
@@ -227,7 +202,8 @@
         }
         .tabletop {
             position: absolute;
-            left: 12%; right: 12%;
+            left: 12%;
+            right: 12%;
             bottom: 36px;
             height: 16px;
             background: #92400e;
@@ -250,16 +226,8 @@
             font-size: 54px;
             transition: transform .45s ease, bottom .45s ease;
         }
-        .stander.fall {
-            transform: translateX(-20%) rotate(78deg);
-            bottom: 20px;
-        }
-        .highlight-parts {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
+        .stander.fall { transform: translateX(-20%) rotate(78deg); bottom: 20px; }
+        .highlight-parts { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
         .part {
             background: #fff;
             border: 2px dashed #64748b;
@@ -289,25 +257,17 @@
             <h2 class="q-title" id="g2-title"></h2>
             <div class="bulb-row">
                 <div class="bulb-item">
-                    <button class="btn-icon locked" id="bulb-tip" title="特性" onclick="openSphereTip()">💡</button>
+                    <button class="btn-icon locked" id="bulb-tip" onclick="openSphereTip()">💡</button>
                     <div class="bulb-label">特性</div>
                 </div>
                 <div class="bulb-item">
-                    <button class="btn-icon" id="bulb-exp" title="實驗" onclick="openExperiment()">💡</button>
+                    <button class="btn-icon" id="bulb-exp" onclick="openExperiment()">💡</button>
                     <div class="bulb-label">實驗</div>
                 </div>
             </div>
         </div>
-        <div class="hint-box" id="g2-hint">
-            球體可以滾動，沒有邊，也沒有角。
-        </div>
-        <div class="choices" id="g2-choices"></div>
-        <div class="feedback" id="g2-fb"></div>
-        <div class="nav-row">
-            <button class="btn btn-blue" onclick="nextG2()">下一題</button>
-        </div>
-
-        <div class="lab" id="ramp-lab" style="display:none;">
+        <div class="hint-box" id="g2-hint">球體可以滾動，沒有邊，也沒有角。</div>
+        <div class="lab" id="ramp-lab">
             <h3>斜道實驗</h3>
             <p>先選物件，再按「放到斜道」。</p>
             <div class="objects" id="ramp-objects"></div>
@@ -320,7 +280,11 @@
                 <div class="ramp-board"></div>
                 <div class="roller" id="roller">❓</div>
             </div>
-            <div class="feedback" id="ramp-fb"></div>
+        </div>
+        <div class="choices" id="g2-choices"></div>
+        <div class="feedback" id="g2-fb"></div>
+        <div class="nav-row">
+            <button class="btn btn-blue" onclick="nextG2()">下一題</button>
         </div>
     </section>
 
@@ -331,27 +295,19 @@
             <h2 class="q-title" id="g3-title"></h2>
             <div class="bulb-row">
                 <div class="bulb-item">
-                    <button class="btn-icon locked" id="bulb-tip-p" title="特性" onclick="openPrismTip()">💡</button>
+                    <button class="btn-icon locked" id="bulb-tip-p" onclick="openPrismTip()">💡</button>
                     <div class="bulb-label">特性</div>
                 </div>
                 <div class="bulb-item">
-                    <button class="btn-icon" id="bulb-exp-p" title="實驗" onclick="openTableExperiment()">💡</button>
+                    <button class="btn-icon" id="bulb-exp-p" onclick="openTableExperiment()">💡</button>
                     <div class="bulb-label">實驗</div>
                 </div>
             </div>
         </div>
-        <div class="hint-box" id="g3-hint">
-            柱體可以豎立，頂和底都是平的。
-        </div>
-        <div class="choices" id="g3-choices"></div>
-        <div class="feedback" id="g3-fb"></div>
-        <div class="nav-row">
-            <button class="btn btn-blue" onclick="nextG3()">下一題</button>
-        </div>
-
-        <div class="lab" id="table-lab" style="display:none;">
+        <div class="hint-box" id="g3-hint">柱體可以豎立，頂和底都是平的。</div>
+        <div class="lab" id="table-lab">
             <h3>桌面實驗</h3>
-            <p>先選物件，再按「放到桌上」。若能豎立，再指出頂和底。</p>
+            <p>先選物件，再按「放到桌上」。</p>
             <div class="objects" id="table-objects"></div>
             <div class="nav-row" style="margin:8px 0;">
                 <button class="btn btn-green" onclick="placeOnTable()">放到桌上</button>
@@ -363,11 +319,15 @@
                 <div class="table-leg l"></div>
                 <div class="table-leg r"></div>
             </div>
-            <div class="feedback" id="table-fb"></div>
             <div class="highlight-parts">
-                <button class="part" id="part-top" onclick="markPart('top')">頂（平面）</button>
-                <button class="part" id="part-bottom" onclick="markPart('bottom')">底（平面）</button>
+                <button class="part" id="part-top" onclick="markPart('top')">頂</button>
+                <button class="part" id="part-bottom" onclick="markPart('bottom')">底</button>
             </div>
+        </div>
+        <div class="choices" id="g3-choices"></div>
+        <div class="feedback" id="g3-fb"></div>
+        <div class="nav-row">
+            <button class="btn btn-blue" onclick="nextG3()">下一題</button>
         </div>
     </section>
 </div>
@@ -379,7 +339,6 @@
         const u = new SpeechSynthesisUtterance(text);
         u.lang = 'zh-HK';
         u.rate = 0.8;
-        u.pitch = 1;
         speechSynthesis.speak(u);
     }
     function showTab(id, btn) {
@@ -393,41 +352,28 @@
     }
 
     const g2Data = [
-        {
-            title: '哪一個是球體？',
-            items: [
-                { name: '橙', emoji: '🍊', sphere: true },
-                { name: '雪糕', emoji: '🍦', sphere: false },
-                { name: '紙巾盒', emoji: '📦', sphere: false }
-            ]
-        },
-        {
-            title: '哪一個是球體？',
-            items: [
-                { name: '足球', emoji: '⚽', sphere: true },
-                { name: '書本', emoji: '📘', sphere: false },
-                { name: '水杯', emoji: '🥤', sphere: false }
-            ]
-        },
-        {
-            title: '哪一個是球體？',
-            items: [
-                { name: '西瓜', emoji: '🍉', sphere: true },
-                { name: '金字塔', emoji: '🔺', sphere: false },
-                { name: '積木', emoji: '🧊', sphere: false }
-            ]
-        },
-        {
-            title: '哪一個是球體？',
-            items: [
-                { name: '玻璃珠', emoji: '🔵', sphere: true },
-                { name: '罐', emoji: '🥫', sphere: false },
-                { name: '派對帽', emoji: '🎉', sphere: false }
-            ]
-        }
+        { title: '哪一個是球體？', items: [
+            { name: '橙', emoji: '🍊', sphere: true },
+            { name: '雪糕', emoji: '🍦', sphere: false },
+            { name: '紙巾盒', emoji: '📦', sphere: false }
+        ]},
+        { title: '哪一個是球體？', items: [
+            { name: '足球', emoji: '⚽', sphere: true },
+            { name: '書本', emoji: '📘', sphere: false },
+            { name: '水杯', emoji: '🥤', sphere: false }
+        ]},
+        { title: '哪一個是球體？', items: [
+            { name: '西瓜', emoji: '🍉', sphere: true },
+            { name: '金字塔', emoji: '🔺', sphere: false },
+            { name: '積木', emoji: '🧊', sphere: false }
+        ]},
+        { title: '哪一個是球體？', items: [
+            { name: '玻璃珠', emoji: '🔵', sphere: true },
+            { name: '罐', emoji: '🥫', sphere: false },
+            { name: '派對帽', emoji: '🎉', sphere: false }
+        ]}
     ];
-    let g2Index = 0;
-    let rampPick = null;
+    let g2Index = 0, rampPick = null, openedExperiment = false;
 
     function renderG2() {
         const q = g2Data[g2Index];
@@ -451,27 +397,22 @@
             celebrate();
         } else {
             buttons[i].classList.add('wrong');
-            document.getElementById('g2-fb').textContent = '請再想一想。可按燈看提示。';
+            document.getElementById('g2-fb').textContent = '請再想一想。';
             speakNow('請再想一想。');
         }
     }
-    let openedExperiment = false;
-
     function openExperiment() {
         document.getElementById('ramp-lab').style.display = 'block';
         openedExperiment = true;
-        const tipBtn = document.getElementById('bulb-tip');
-        tipBtn.classList.remove('locked');
+        document.getElementById('bulb-tip').classList.remove('locked');
     }
-
     function openSphereTip() {
         if (!openedExperiment) {
             document.getElementById('g2-fb').textContent = '請先按「實驗」。';
             return;
         }
         const box = document.getElementById('g2-hint');
-        const show = box.style.display !== 'block';
-        box.style.display = show ? 'block' : 'none';
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
     function setupRamp(items) {
         rampPick = null;
@@ -487,28 +428,18 @@
         const roller = document.getElementById('roller');
         roller.textContent = rampPick.emoji;
         roller.className = 'roller';
-        document.getElementById('ramp-fb').textContent = '已選：' + rampPick.name;
     }
     function releaseRamp() {
-        if (!rampPick) {
-            document.getElementById('ramp-fb').textContent = '請先選物件。';
-            return;
-        }
+        if (!rampPick) return;
         const roller = document.getElementById('roller');
         roller.className = 'roller';
         void roller.offsetWidth;
-        if (rampPick.sphere) {
-            roller.classList.add('roll');
-        } else {
-            roller.classList.add('stuck');
-        }
-        document.getElementById('ramp-fb').textContent = '';
+        roller.classList.add(rampPick.sphere ? 'roll' : 'stuck');
     }
     function resetRamp() {
         const roller = document.getElementById('roller');
         roller.className = 'roller';
         roller.textContent = rampPick ? rampPick.emoji : '❓';
-        document.getElementById('ramp-fb').textContent = '';
     }
     function nextG2() {
         g2Index = (g2Index + 1) % g2Data.length;
@@ -520,42 +451,27 @@
     }
 
     const g3Data = [
-        {
-            title: '哪一個是柱體？',
-            items: [
-                { name: '圓柱罐', emoji: '🥫', prism: true },
-                { name: '波', emoji: '🏀', prism: false },
-                { name: '雪糕', emoji: '🍦', prism: false }
-            ]
-        },
-        {
-            title: '哪一個是柱體？',
-            items: [
-                { name: '紙巾盒', emoji: '📦', prism: true },
-                { name: '橙', emoji: '🍊', prism: false }
-            ]
-        },
-        {
-            title: '哪一個是柱體？',
-            items: [
-                { name: '積木', emoji: '🧱', prism: true },
-                { name: '玻璃珠', emoji: '🔵', prism: false },
-                { name: '派對帽', emoji: '🎉', prism: false }
-            ]
-        },
-        {
-            title: '哪一個是柱體？',
-            items: [
-                { name: '水杯', emoji: '🥛', prism: true },
-                { name: '足球', emoji: '⚽', prism: false },
-                { name: '雪糕筒', emoji: '🍦', prism: false }
-            ]
-        }
+        { title: '哪一個是柱體？', items: [
+            { name: '圓柱罐', emoji: '🥫', prism: true },
+            { name: '波', emoji: '🏀', prism: false },
+            { name: '雪糕', emoji: '🍦', prism: false }
+        ]},
+        { title: '哪一個是柱體？', items: [
+            { name: '紙巾盒', emoji: '📦', prism: true },
+            { name: '橙', emoji: '🍊', prism: false }
+        ]},
+        { title: '哪一個是柱體？', items: [
+            { name: '積木', emoji: '🧱', prism: true },
+            { name: '玻璃珠', emoji: '🔵', prism: false },
+            { name: '派對帽', emoji: '🎉', prism: false }
+        ]},
+        { title: '哪一個是柱體？', items: [
+            { name: '水杯', emoji: '🥛', prism: true },
+            { name: '足球', emoji: '⚽', prism: false },
+            { name: '雪糕筒', emoji: '🍦', prism: false }
+        ]}
     ];
-    let g3Index = 0;
-    let tablePick = null;
-    let foundTop = false;
-    let foundBottom = false;
+    let g3Index = 0, tablePick = null, openedTableExperiment = false;
 
     function renderG3() {
         const q = g3Data[g3Index];
@@ -579,30 +495,25 @@
             celebrate();
         } else {
             buttons[i].classList.add('wrong');
-            document.getElementById('g3-fb').textContent = '請再想一想。可按燈看提示。';
+            document.getElementById('g3-fb').textContent = '請再想一想。';
             speakNow('請再想一想。');
         }
     }
-    let openedTableExperiment = false;
-
     function openTableExperiment() {
         document.getElementById('table-lab').style.display = 'block';
         openedTableExperiment = true;
         document.getElementById('bulb-tip-p').classList.remove('locked');
     }
-
     function openPrismTip() {
         if (!openedTableExperiment) {
             document.getElementById('g3-fb').textContent = '請先按「實驗」。';
             return;
         }
         const box = document.getElementById('g3-hint');
-        box.style.display = box.style.display !== 'block' ? 'block' : 'none';
+        box.style.display = box.style.display === 'block' ? 'none' : 'block';
     }
     function setupTable(items) {
         tablePick = null;
-        foundTop = false;
-        foundBottom = false;
         document.getElementById('part-top').classList.remove('found');
         document.getElementById('part-bottom').classList.remove('found');
         document.getElementById('table-objects').innerHTML = items.map((it, i) =>
@@ -617,46 +528,24 @@
         const el = document.getElementById('stander');
         el.textContent = tablePick.emoji;
         el.className = 'stander';
-        document.getElementById('table-fb').textContent = '已選：' + tablePick.name;
     }
     function placeOnTable() {
-        if (!tablePick) {
-            document.getElementById('table-fb').textContent = '請先選物件。';
-            return;
-        }
+        if (!tablePick) return;
         const el = document.getElementById('stander');
         el.className = 'stander';
         void el.offsetWidth;
-        if (tablePick.prism) {
-            el.classList.remove('fall');
-        } else {
-            el.classList.add('fall');
-        }
-        document.getElementById('table-fb').textContent = '';
+        if (!tablePick.prism) el.classList.add('fall');
     }
     function resetTable() {
         const el = document.getElementById('stander');
         el.className = 'stander';
         el.textContent = tablePick ? tablePick.emoji : '❓';
-        document.getElementById('table-fb').textContent = '';
-        foundTop = false;
-        foundBottom = false;
         document.getElementById('part-top').classList.remove('found');
         document.getElementById('part-bottom').classList.remove('found');
     }
     function markPart(which) {
-        if (!tablePick) {
-            document.getElementById('table-fb').textContent = '請先選物件。';
-            return;
-        }
-        if (which === 'top') {
-            foundTop = true;
-            document.getElementById('part-top').classList.add('found');
-        } else {
-            foundBottom = true;
-            document.getElementById('part-bottom').classList.add('found');
-        }
-        document.getElementById('table-fb').textContent = '';
+        if (!tablePick) return;
+        document.getElementById(which === 'top' ? 'part-top' : 'part-bottom').classList.add('found');
     }
     function nextG3() {
         g3Index = (g3Index + 1) % g3Data.length;
